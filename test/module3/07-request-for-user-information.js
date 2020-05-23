@@ -15,6 +15,12 @@ it("/callback requests for user info from the protected resource @client-callbac
 	let called = false
 	let accessTokenEndpointCalled = false
 	moxios.wait(() => {
+		const req = moxios.requests.mostRecent()
+		if (!req) {
+			return
+		}
+		moxios.requests.reset()
+
 		moxios.wait(() => {
 			const req = moxios.requests.mostRecent()
 			if (!req || !accessTokenEndpointCalled) {
@@ -48,11 +54,6 @@ it("/callback requests for user info from the protected resource @client-callbac
 			})
 		})
 
-		const req = moxios.requests.mostRecent()
-		if (!req) {
-			return
-		}
-
 		accessTokenEndpointCalled = true
 		req.respondWith({
 			status: 200,
@@ -73,7 +74,7 @@ it("/callback requests for user info from the protected resource @client-callbac
 			assert.equal(
 				called,
 				true,
-				"/callback needs to make an HTTP call to request for the access token"
+				"/callback did not make an HTTP call to request for user-info"
 			)
 		})
 })
