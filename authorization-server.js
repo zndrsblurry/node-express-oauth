@@ -86,10 +86,6 @@ app.post("/approve", (req, res) => {
 		res.status(401).send("Error: invalid user request")
 		return
 	}
-	if (clientReq.response_type !== "code") {
-		res.status(400).send("Error: unsupported response type")
-		return
-	}
 	const code = randomString()
 	authorizationCodes[code] = { clientReq, userName }
 	const redirectUri = url.parse(clientReq.redirect_uri)
