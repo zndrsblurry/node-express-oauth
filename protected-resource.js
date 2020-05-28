@@ -30,7 +30,21 @@ app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 
 app.get("/user-info", (req, res) => {
-	const userInfo = getUserInfoFromAccessToken(req)
+	if (!req.headers.authorization) {
+		res.status(401).send("Error: client unauthorized")
+		return
+	}
+
+	const authToken = req.headers.authorization.slice("bearer ".length)
+	let userInfo = null
+	try {
+		userInfo = jwt.verify(authToken, config.publicKey, {
+			algorithms: ["RS256"],
+		})
+	} catch (e) {
+		res.status(401).send("Error: client unauthorized")
+		return
+	}
 	if (!userInfo) {
 		res.status(401).send("Error: client unauthorized")
 		return
@@ -53,33 +67,7 @@ const server = app.listen(config.port, "localhost", function () {
 	console.log("OAuth Resource is listening at http://%s:%s", host, port)
 })
 
-function getToken(req) {
-	if (req.headers.authorization) {
-		return req.headers.authorization.slice("bearer ".length)
-	}
-}
-
-function getUserInfoFromAccessToken(req) {
-	const authToken = getToken(req)
-	if (!authToken) {
-		return null
-	}
-
-	let userInfo = null
-
-	try {
-		userInfo = jwt.verify(authToken, config.publicKey, {
-			algorithms: ["RS256"],
-		})
-	} catch (e) {
-		return null
-	}
-
-	return userInfo
-}
-
 // for testing purposes
-
 module.exports = {
 	app,
 	server,
