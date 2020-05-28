@@ -30,7 +30,6 @@ app.get("/authorize", (req, res) => {
 	redirectUrl.query = {
 		response_type: "code",
 		client_id: config.clientId,
-		client_secret: config.clientSecret,
 		redirect_uri: config.redirectUri,
 		scope: "permission:name permission:date_of_birth",
 		state: state,
@@ -57,10 +56,6 @@ app.get("/callback", (req, res) => {
 		validateStatus: null,
 	})
 		.then((response) => {
-			if (response.status !== 200) {
-				res.status(500).send("Error: something went wrong")
-				return
-			}
 			return axios({
 				method: "GET",
 				url: config.userInfoEndpoint,
@@ -70,12 +65,6 @@ app.get("/callback", (req, res) => {
 			})
 		})
 		.then((response) => {
-			if (response.status !== 200) {
-				res.status(403).send(
-					"Error: could not get data from protected resource"
-				)
-				return
-			}
 			res.render("welcome", { user: response.data })
 		})
 		.catch((err) => {

@@ -28,11 +28,6 @@ it("redirects user to authorization endpoint @client-redirect-user-to-authorizat
 				"redirect URL should contain the correct client_id param"
 			)
 			assert.equal(
-				query.client_secret,
-				"zETqHgl0d7ThysUqPnaFuLOmG1E=",
-				"redirect URL should contain the correct client_secret param"
-			)
-			assert.equal(
 				query.redirect_uri,
 				"http://localhost:9000/callback",
 				"redirect URL should contain the correct redirect_uri param"
