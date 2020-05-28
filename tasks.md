@@ -66,7 +66,6 @@ Finally, we need to return a redirect response, sending the user to the `/author
 
 -   `response_type` which is set to `"code"`
 -   `client_id` which is set to `config.clientId`
--   `client_secret` which is set to `config.clientSecret`
 -   `redirect_uri` which is set to `config.redirectUri`
 -   `scope` which is set to `"permission:name permission:date_of_birth"`
 -   `state` which is set to the random string that you generated in the previous task
